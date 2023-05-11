@@ -1,8 +1,8 @@
 
-# WHAT IS THIS?
+## WHAT IS THIS?
 This script is a Linux-specific command-line utility to manage POSIX queues.
 
-# BUILT AND USE IT
+## BUILT AND USE IT
 You can compile this program with the command:
 ```sh
 $ gcc pq.c -o pq -Wall -Wextra -lrt
@@ -20,11 +20,11 @@ if you want to know more on how to use it, just run it without arguments:
 $ ./pq
 ```
 
-# HOW IT WORKS
+## HOW IT WORKS
 
 From the [manual](https://linux.die.net/man/7/mq_overview):
 
-> # Mounting the message queue filesystem
+> ### Mounting the message queue filesystem
 > On Linux, message queues are created in a virtual filesystem.
 > (Other implementations may also provide such a feature, but the
 > details are likely to differ.)  This filesystem can be mounted
