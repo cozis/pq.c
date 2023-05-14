@@ -137,7 +137,7 @@ static bool unlinkPosixQueue(const char *queue_name)
 
 static void usage(FILE *stream, const char *progname)
 {
-    fprintf(stream, "Usage: $ %s { ls | stat /<queue-name> | unlink /<queue-name> }\n", progname);
+    fprintf(stream, "Usage: $ sudo %s { ls | stat /<queue-name> | unlink /<queue-name> }\n", progname);
 }
 
 int main(int argc, char **argv)
