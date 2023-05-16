@@ -11,9 +11,10 @@ which will generate the `pq` executable. You can call this command in various
 ways. Here are some:
 
 ```sh
-$ ./pq ls # List al queues
-$ ./pq unlink /my_queue # Delete a queue named "my_queue"
-$ ./pq stat /my_queue # Get information about the queue "my_queue"
+$ sudo ./pq ls # List all queues
+$ sudo ./pq unlink /my_queue # Delete a queue named "my_queue"
+$ sudo ./pq stat /my_queue # Get information about the queue "my_queue"
+$ sudo ./pq umount # Unmount "/dev/mqueue" and remove directory "mqueue"
 ```
 if you want to know more on how to use it, just run it without arguments:
 ```sh

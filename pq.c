@@ -43,6 +43,7 @@
 #include <mqueue.h>
 #include <stdbool.h>
 #include <sys/stat.h>
+#include <unistd.h>
 #include <sys/mount.h>
 
 #define MOUNT_POINT "/dev/mqueue"
@@ -67,6 +68,27 @@ static bool ensurePosixQueueFileSystemMounted(void)
         fprintf(stderr, "Error: Couldn't mount the posix queue filesystem (%s)\n", strerror(errno));
         return false;
     }
+
+    return true;
+}
+
+//unmount POSIX queue file system in "/dev/mqueue" and remove dir "mqueue"
+static bool unmountPosixQueueFileSystem(void)
+{
+    int res;
+
+    res = umount(MOUNT_POINT);
+    if (res && errno!=ENOENT) { //If the umount call fails with ENOENT it
+								//means that the mount point did not exist
+        fprintf(stderr, "Error: Couldn't unmount the posix queue filesystem (%s)\n", strerror(errno));
+        return false;
+    }
+	// Remove the mount point folder if it wasn't busy.
+	res = rmdir(MOUNT_POINT);
+	if (res && errno != ENOENT) { 
+		fprintf(stderr, "Error: Couldn't remove posix filesystem mount point %s (%s)\n", MOUNT_POINT, strerror(errno));
+		return false;
+	}
 
     return true;
 }
@@ -137,7 +159,7 @@ static bool unlinkPosixQueue(const char *queue_name)
 
 static void usage(FILE *stream, const char *progname)
 {
-    fprintf(stream, "Usage: $ %s { ls | stat /<queue-name> | unlink /<queue-name> }\n", progname);
+    fprintf(stream, "Usage: $ sudo %s { ls | stat /<queue-name> | unlink /<queue-name> | umount }\n", progname);
 }
 
 int main(int argc, char **argv)
@@ -148,6 +170,11 @@ int main(int argc, char **argv)
         usage(stderr, progname);
         return -1;
     }
+
+	//In this case we have to umount without mounting
+	//so it is placed before ensurePosixQueueFileSystemMounted
+    if (!strcmp(argv[1], "umount"))
+        return unmountPosixQueueFileSystem() ? 0 : -1;
 
     if (!ensurePosixQueueFileSystemMounted())
         return -1;
