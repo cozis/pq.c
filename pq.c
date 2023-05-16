@@ -3,7 +3,7 @@
 **
 ** This script is a Linux-specific command-line utility to manage POSIX queues.
 **
-** === BUILT IT ============================================================
+** === BUILD IT ============================================================
 **
 ** You can compile this program with:
 **   $ gcc pq.c -o pq -Wall -Wextra -lrt
@@ -83,7 +83,7 @@ static bool unmountPosixQueueFileSystem(void)
         fprintf(stderr, "Error: Couldn't unmount the posix queue filesystem (%s)\n", strerror(errno));
         return false;
     }
-	// Remove the mount point folder if it wasn't busy.
+	// Remove the mount point folder if it exists
 	res = rmdir(MOUNT_POINT);
 	if (res && errno != ENOENT) { 
 		fprintf(stderr, "Error: Couldn't remove posix filesystem mount point %s (%s)\n", MOUNT_POINT, strerror(errno));

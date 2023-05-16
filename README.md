@@ -1,8 +1,9 @@
+## pq.c, A tool to manage your POSIX queues!
 
-## WHAT IS THIS?
+### WHAT IS THIS?
 This script is a Linux-specific command-line utility to manage POSIX queues.
 
-## BUILT AND USE IT
+### BUILD AND USE IT
 You can compile this program with the command:
 ```sh
 $ gcc pq.c -o pq -Wall -Wextra -lrt
@@ -21,7 +22,7 @@ if you want to know more on how to use it, just run it without arguments:
 $ ./pq
 ```
 
-## HOW IT WORKS
+### HOW IT WORKS
 
 From the [manual](https://linux.die.net/man/7/mq_overview):
 
