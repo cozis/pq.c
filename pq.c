@@ -73,22 +73,21 @@ static bool ensurePosixQueueFileSystemMounted(void)
 }
 
 //unmount POSIX queue file system in "/dev/mqueue" and remove dir "mqueue"
-static bool unmountPosixQueue(void)
+static bool unmountPosixQueueFileSystem(void)
 {
     int res;
 
     res = umount(MOUNT_POINT);
-    if (res && errno == EBUSY) { // If the umount call fails with EBUSY it 
-                                 // means that the FS is busy and can't be unmounted.
+    if (res && errno!=ENOENT) { //If the umount call fails with ENOENT it
+								//means that the mount point did not exist
         fprintf(stderr, "Error: Couldn't unmount the posix queue filesystem (%s)\n", strerror(errno));
         return false;
     }
-	else{// Remove the mount point folder if it wasn't busy.
-		res = rmdir(MOUNT_POINT);
-		if (res && errno != EBUSY) { 
-			fprintf(stderr, "Error: Couldn't remove posix filesystem mount point %s (%s)\n", MOUNT_POINT, strerror(errno));
-			return false;
-		}
+	// Remove the mount point folder if it wasn't busy.
+	res = rmdir(MOUNT_POINT);
+	if (res && errno != ENOENT) { 
+		fprintf(stderr, "Error: Couldn't remove posix filesystem mount point %s (%s)\n", MOUNT_POINT, strerror(errno));
+		return false;
 	}
 
     return true;
@@ -172,14 +171,16 @@ int main(int argc, char **argv)
         return -1;
     }
 
+	//In this case we have to umount without mounting
+	//so it is placed before ensurePosixQueueFileSystemMounted
+    if (!strcmp(argv[1], "umount"))
+        return unmountPosixQueueFileSystem() ? 0 : -1;
+
     if (!ensurePosixQueueFileSystemMounted())
         return -1;
 
     if (!strcmp(argv[1], "ls"))
         return listPosixQueues() ? 0 : -1;
-
-    if (!strcmp(argv[1], "umount"))
-        return unmountPosixQueue() ? 0 : -1;
 
     if (!strcmp(argv[1], "stat")) {
         if (argc < 3) {
